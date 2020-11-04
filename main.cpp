@@ -66,12 +66,19 @@ int main(int argc, char *argv[]) {
     PyObject *name, *n, *lib, *printer, *args, *res;
 
     Py_Initialize();
-    if (!(name = PyUnicode_FromString("lib")))
-        return -1;
 
-//    vector<vector<double>> pts = getPoints("lib", "p");
-    vector<double> pts{1,2,3,4,5,6,7,8,9};
-    plotLoss(pts, "losses", "plotLosses");
+    // TODO: get points of the first class y=+1
+    vector<vector<double>> x1 = {};
+    // TODO: get points of the second class y=-1
+    vector<vector<double>> x2 = {};
+
+    // TODO: Create the X matrix and y and model to use.
+
+    // TODO: Optimize and get the loss's evolution
+    vector<double> losses = {};
+    // Plotting the error.
+    plotLoss(losses, "losses", "plotLosses");
+
 
     Py_Finalize();
 
