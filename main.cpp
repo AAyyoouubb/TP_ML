@@ -47,15 +47,16 @@ void plotLoss(const vector<double> &loss, char *name, char *func) {
     Py_DECREF(pname);
     pfunc = PyObject_GetAttrString(lib, func);
     args = PyList_New(loss.size());
-    for (auto &t: loss) {
-        tmp = PyFloat_FromDouble(t);
-        PyList_Append(args, tmp);
-        Py_DecRef(tmp);
+    loop(i, 0, loss.size()) {
+        tmp = PyFloat_FromDouble(loss[i]);
+        PyList_SetItem(args, i, tmp);
     }
     tuple = PyTuple_New(1);
     PyTuple_SetItem(tuple, 0, args);
     PyObject_CallObject(pfunc, tuple);
 
+    Py_DECREF(tuple);
+    Py_DECREF(args);
     Py_DECREF(lib);
     Py_DECREF(pfunc);
 }
@@ -70,19 +71,6 @@ int main(int argc, char *argv[]) {
 
     vector<vector<double>> pts = getPoints("lib", "p");
     plotLoss(pts[0], "lib", "pp");
-//
-//    n = PyLong_FromLong(10l);
-//    args = PyTuple_New(1);
-//    PyTuple_SetItem(args, 0, n);
-//
-//
-//    lib = PyImport_Import(name);
-//    Py_DECREF(name);
-//    printer = PyObject_GetAttrString(lib, "p");
-//
-//    res = PyObject_CallObject(printer, args);
-//    cout << "hhhhh   " << PyLong_AsLong(PyList_GetItem(res, 1)) << endl;
-
 
     Py_Finalize();
 

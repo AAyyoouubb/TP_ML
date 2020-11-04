@@ -5,6 +5,8 @@ def p():
 
 def pp(l):
     print("here")
+    print(len(l))
+    print(l[0])
     for t in l:
         print(t,end=" ")
     print(" ")
