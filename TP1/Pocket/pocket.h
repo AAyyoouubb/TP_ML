@@ -3,6 +3,10 @@
 #include "../DataStructure/Matrix.h"
 using namespace std;
 
+double randomGen(int i, int j) {
+    return 0.02334 * (double) (random() % 376);
+}
+
 class Pocket
 {
 public:
@@ -11,7 +15,7 @@ public:
     Matrix<int> y;
     int n;
 
-     Pocket(int n)
+    Pocket(int n)
     {
         w = Matrix<double>(n + 1, 1);
         w.randomfill(&randomGen);
@@ -48,7 +52,7 @@ public:
             {
                 if (y(i) * t(i) < 0)
                 {
-                    w[i] = w[i] + x[i] * y[i];
+                    w[i] = w[i] + X[i] * y[i];
                     break;
                 }
             }

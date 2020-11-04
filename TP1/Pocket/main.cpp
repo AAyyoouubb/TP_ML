@@ -11,7 +11,7 @@ int main() {
         X(i, 1) = X(i, 0);
     }
 
-    Perceptron p(cols);
+    Pocket p(cols);
     X.print();
     vector<double> loss = p.fit(X, y);
     p.w.print();
