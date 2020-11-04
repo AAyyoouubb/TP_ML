@@ -16,7 +16,6 @@ int main() {
     Py_Initialize();
 
     run("import matplotlib.pyplot as plt\nimport numpy as np");
-    run("print('Helloff World from Embedded Python!!!')");
 
     run("x = np.arange(0, 1, 0.05)\n"
         "y = np.power(x, 2)\n"
