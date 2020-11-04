@@ -37,7 +37,7 @@ public:
     vector<double> fit(Matrix<double> &X, Matrix<int> &y) {
         vector<double> losses;
         double los = 1;
-        int Tmax = 10000;
+        int Tmax = 100;
         Matrix<double> ws = w;
 
         loop(tt, 0, Tmax) {
