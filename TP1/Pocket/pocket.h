@@ -11,7 +11,7 @@ public:
     Matrix<int> y;
     int n;
 
-    explicit Pocket(int n)
+     Pocket(int n)
     {
         w = Matrix<double>(n + 1, 1);
         w.randomfill(&randomGen);
@@ -22,7 +22,7 @@ public:
         return double(x * w[ {1, -1}] + w(0));
     }
 
-    double loss(Matrix<double> w,Matrix<double> &X, Matrix<int> &y)
+    double loss(Matrix<double> w, Matrix<double> &X, Matrix<int> &y)
     {
         double loss = 0;
         auto t = X * w[ {1, -1}] + w(0);
@@ -43,11 +43,20 @@ public:
 
         loop(i, 0, Tmax)
         {
-            // Calculate w(t) TODO
-            if(loss(w,X,y) < loss(ws,X,y))
+            auto t = X * w[ {1, -1}] + w(0);
+            loop(i, 0, n)
+            {
+                if (y(i) * t(i) < 0)
+                {
+                    w[i] = w[i] + x[i] * y[i];
+                    break;
+                }
+            }
+
+            if(loss(w, X, y) < loss(ws, X, y))
                 ws = w;
 
-            losses.push_back(loss(ws,X,y));
+            losses.push_back(loss(ws, X, y));
         }
         return losses;
     }
