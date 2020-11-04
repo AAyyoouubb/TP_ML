@@ -1,3 +1,0 @@
-/home/ayoub/CLionProjects/TP_ML/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ayoub/CLionProjects/TP_ML/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ayoub/CLionProjects/TP_ML/cmake-build-debug/CMakeFiles/TP_ML.dir
