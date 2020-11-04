@@ -1,0 +1,6 @@
+# The fortran modules provided by this target.
+provides
+ constants.mod
+ delta_rule_mod.mod
+ perceptron_mod.mod
+ pocket_mod.mod
