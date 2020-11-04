@@ -69,8 +69,9 @@ int main(int argc, char *argv[]) {
     if (!(name = PyUnicode_FromString("lib")))
         return -1;
 
-    vector<vector<double>> pts = getPoints("lib", "p");
-    plotLoss(pts[0], "lib", "pp");
+//    vector<vector<double>> pts = getPoints("lib", "p");
+    vector<double> pts{1,2,3,4,5,6,7,8,9};
+    plotLoss(pts, "losses", "plotLosses");
 
     Py_Finalize();
 

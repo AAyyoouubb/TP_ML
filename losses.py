@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
 
-def plotLesses(L):
+def plotLosses(L):
 	plt.plot(L)
 	plt.show()
