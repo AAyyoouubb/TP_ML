@@ -1,7 +1,3 @@
-//
-// Created by ayoub on 20. 11. 6..
-//
-
 #ifndef TP_ML_DELTARULE_H
 #define TP_ML_DELTARULE_H
 

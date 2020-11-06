@@ -1,8 +1,13 @@
 
-#include "TP1/Cpp/Perceptron.h"
+#include "TP1/C/Perceptron.h"
+//#include "TP1/C/Pocket.h"
+//#include "TP1/C/DeltaRule.h"
 
 #include <cstdio>
 #include <Python.h>
+#include <bits/stdc++.h>
+
+using namespace std;
 
 void run(const char *s) {
     PyRun_SimpleString(s);
@@ -61,24 +66,50 @@ void plotLoss(const vector<double> &loss, char *name, char *func) {
     Py_DECREF(pfunc);
 }
 
+void showLoss(char *name, char *func) {
+    PyObject *pfunc, *lib;
+
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
+
+    PyObject *pname = PyUnicode_FromString(name);
+    lib = PyImport_Import(pname);
+    Py_DECREF(pname);
+    pfunc = PyObject_GetAttrString(lib, func);
+
+    PyObject_CallObject(pfunc, NULL);
+
+    Py_DECREF(lib);
+    Py_DECREF(pfunc);
+}
+
 // Command: g++ main.cpp -o main -lpython3.8 -I /usr/include/python3.8
 int main(int argc, char *argv[]) {
-    PyObject *name, *n, *lib, *printer, *args, *res;
 
     Py_Initialize();
 
-    // TODO: get points of the first class y=+1
-    vector<vector<double>> x1 = {};
-    // TODO: get points of the second class y=-1
-    vector<vector<double>> x2 = {};
+    //  Create the X matrix and y and model to use.
+    //  TODO: check this to know how to add points: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.ginput.html
+    vector<vector<double>> pts = getPoints("getPoints", "points");
+    int nn = pts.size(), mm = pts[0].size() - 1;
+    double **x = (double **) malloc(sizeof(double) * nn);
+    int *y = (int *) malloc(sizeof(int) * nn);
+    for (int i = 0; i < nn; i++) {
+        x[i] = (double *) malloc(sizeof(double) * mm);
+        y[i] = pts[i][mm];
+        for (int j = 0; j < mm; j++) x[i][j] = pts[i][j];
+    }
 
-    // TODO: Create the X matrix and y and model to use.
+    // Optimize and get the loss's evolution
+    vector<double> percep = fit(x, y, nn, mm);
+//    vector<double> pocket = fit(x,y,nn,mm);
+//    vector<double> delta = fit(x,y,nn,mm);
 
-    // TODO: Optimize and get the loss's evolution
-    vector<double> losses = {};
     // Plotting the error.
-    plotLoss(losses, "losses", "plotLosses");
-
+    plotLoss(percep, "losses", "plotLosses");
+//    plotLoss(pocket, "losses", "plotLosses");
+//    plotLoss(delta, "losses", "plotLosses");
+    showLoss("losses", "show");
 
     Py_Finalize();
 
