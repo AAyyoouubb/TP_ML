@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def plotLosses(L):
     plt.clf()
-    plt.setp(plt.gca(), autoscale_on=False)
+    # plt.setp(plt.gca(), autoscale_on=True)
     plt.plot(L)
 
 

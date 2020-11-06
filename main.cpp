@@ -17,6 +17,7 @@ vector<vector<double>> getPoints(char *name, char *func) {
     PyObject *pfunc, *lib, *res, *tmp;
 
     PyRun_SimpleString("import sys");
+    // TODO: put the path to your current working directory
     PyRun_SimpleString("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
 
     PyObject *pname = PyUnicode_FromString(name);
@@ -45,6 +46,7 @@ void plotLoss(const vector<double> &loss, char *name, char *func) {
     PyObject *pfunc, *lib, *res, *tmp, *args, *tuple;
 
     PyRun_SimpleString("import sys");
+    // TODO: put the path to your current working directory
     PyRun_SimpleString("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
 
     PyObject *pname = PyUnicode_FromString(name);
@@ -70,6 +72,7 @@ void showLoss(char *name, char *func) {
     PyObject *pfunc, *lib;
 
     PyRun_SimpleString("import sys");
+    // TODO: put the path to your current working directory
     PyRun_SimpleString("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
 
     PyObject *pname = PyUnicode_FromString(name);
@@ -102,12 +105,14 @@ int main(int argc, char *argv[]) {
 
     // Optimize and get the loss's evolution
     vector<double> percep = fit(x, y, nn, mm);
-//    vector<double> pocket = fit(x,y,nn,mm);
+// TODO: include each library separately to test it and remove the other.
+    //    vector<double> pocket = fit(x,y,nn,mm);
 //    vector<double> delta = fit(x,y,nn,mm);
 
     // Plotting the error.
     plotLoss(percep, "losses", "plotLosses");
-//    plotLoss(pocket, "losses", "plotLosses");
+// TODO: include each library separately to test it and remove the other.
+    //    plotLoss(pocket, "losses", "plotLosses");
 //    plotLoss(delta, "losses", "plotLosses");
     showLoss("losses", "show");
 

@@ -11,4 +11,5 @@ def points():
     p2 = plt.ginput(-1, timeout=0)
     res = [list(t) + [1] for t in p]
     res += [list(t) + [-1] for t in p2]
+    plt.close()
     return res
