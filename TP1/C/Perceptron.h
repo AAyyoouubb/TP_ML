@@ -41,7 +41,8 @@ std::vector<double> fit(double **x, int *y, int nn, int mm) {
     randomW();
     double los = loss(x, y);
     int iter = 0;
-    while (los != 0) {
+    while (los != 0 and iter < 10e2) {
+        iter++;
         loop(i, 0, n) if (predict(x[i]) * y[i] < 0) updateW(x[i], y[i]);
         los = loss(x, y);
         losses.push_back(los);
