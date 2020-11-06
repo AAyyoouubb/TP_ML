@@ -29,7 +29,7 @@ void updateW(const double *x, int y) {
     loop(i, 0, m) w[i] += x[i] * y;
 }
 
-std::vector<double> fit(double **x, int *y, int nn, int mm) {
+static std::vector<double> fit(double **x, int *y, int nn, int mm) {
     std::vector<double> losses;
     n = nn;
     m = mm;
@@ -37,7 +37,7 @@ std::vector<double> fit(double **x, int *y, int nn, int mm) {
     randomW();
     double los = loss(x, y);
     int iter = 0;
-    while (los != 0 and iter < 10e2) {
+    while (los != 0 and iter < 10e3) {
         iter++;
         loop(i, 0, n) if (predict(x[i]) * y[i] < 0) updateW(x[i], y[i]);
         los = loss(x, y);

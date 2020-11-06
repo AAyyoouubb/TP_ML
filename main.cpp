@@ -1,6 +1,6 @@
 
-#include "TP1/C/Perceptron.h"
-//#include "TP1/C/Pocket.h"
+//#include "TP1/C/Perceptron.h"
+#include "TP1/C/Pocket.h"
 //#include "TP1/C/DeltaRule.h"
 
 #include <cstdio>
@@ -16,9 +16,9 @@ void run(const char *s) {
 vector<vector<double>> getPoints(char *name, char *func) {
     PyObject *pfunc, *lib, *res, *tmp;
 
-    PyRun_SimpleString("import sys");
+    run("import sys");
     // TODO: put the path to your current working directory
-    PyRun_SimpleString("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
+    run("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
 
     PyObject *pname = PyUnicode_FromString(name);
     lib = PyImport_Import(pname);
@@ -51,10 +51,10 @@ void plotLoss(const vector<double> &loss, char *name, char *func) {
 
     PyObject *pname = PyUnicode_FromString(name);
     lib = PyImport_Import(pname);
-    Py_DECREF(pname);
     pfunc = PyObject_GetAttrString(lib, func);
     args = PyList_New(loss.size());
-    loop(i, 0, loss.size()) {
+    loop(i, 0, loss.size())
+    {
         tmp = PyFloat_FromDouble(loss[i]);
         PyList_SetItem(args, i, tmp);
     }
@@ -62,6 +62,7 @@ void plotLoss(const vector<double> &loss, char *name, char *func) {
     PyTuple_SetItem(tuple, 0, args);
     PyObject_CallObject(pfunc, tuple);
 
+    Py_DECREF(pname);
     Py_DECREF(tuple);
     Py_DECREF(args);
     Py_DECREF(lib);
@@ -80,13 +81,14 @@ void showLoss(char *name, char *func) {
     Py_DECREF(pname);
     pfunc = PyObject_GetAttrString(lib, func);
 
-    PyObject_CallObject(pfunc, NULL);
+    PyObject_CallObject(pfunc, nullptr);
 
     Py_DECREF(lib);
     Py_DECREF(pfunc);
 }
 
 // Command: g++ main.cpp -o main -lpython3.8 -I /usr/include/python3.8
+
 int main(int argc, char *argv[]) {
 
     Py_Initialize();
@@ -104,17 +106,17 @@ int main(int argc, char *argv[]) {
     }
 
     // Optimize and get the loss's evolution
-    vector<double> percep = fit(x, y, nn, mm);
 // TODO: include each library separately to test it and remove the other.
-    //    vector<double> pocket = fit(x,y,nn,mm);
-//    vector<double> delta = fit(x,y,nn,mm);
+//        vector<double> percep = fit(x, y, nn, mm);
+    vector<double> pocket = fit(x, y, nn, mm, 10000);
+//    vector<double> delta = fit(x, y, nn, mm, 10000);
 
     // Plotting the error.
-    plotLoss(percep, "losses", "plotLosses");
-// TODO: include each library separately to test it and remove the other.
-    //    plotLoss(pocket, "losses", "plotLosses");
+    // TODO: include each library separately to test it and remove the other.
+//    plotLoss(percep, "losses", "plotLosses");
+    plotLoss(pocket, "losses", "plotLosses");
 //    plotLoss(delta, "losses", "plotLosses");
-    showLoss("losses", "show");
+
 
     Py_Finalize();
 

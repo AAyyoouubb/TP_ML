@@ -8,33 +8,34 @@
 
 #define loop(i, a, b) for(int i=a;i<b;i++)
 
-int n, m;
-double *w;
+static int n, m;
+static double *w;
+
 
 void randomW();
 
-double predict(const double *x) {
-    double s = w[m];
-    loop(i, 0, m) s += w[i] * x[i];
+double predict(const double *ws, const double *x) {
+    double s = ws[m];
+    loop(i, 0, m) s += ws[i] * x[i];
     return s;
 }
 
 double loss(double *ws, double **x, const int *y) {
     int l = 0;
-    loop(i, 0, n) if (predict(x[i]) * y[i] < 0) l++;
+    loop(i, 0, n) if (predict(ws, x[i]) * y[i] < 0) l++;
     return (double) l / n;
 }
 
 void updateWs(double *ws, const double *x, int y) {
-    ws[m] = w[m] + y;
-    loop(i, 0, m) ws[i] = w[m] + x[i] * y;
+    ws[m] += y;
+    loop(i, 0, m) ws[i] +=  x[i] * y;
 }
 
 void updateW(const double *ws) {
     loop(i, 0, m + 1) w[i] = ws[i];
 }
 
-std::vector<double> fit(double **x, int *y, int nn, int mm, int iter) {
+static std::vector<double> fit(double **x, int *y, int nn, int mm, int iter) {
     std::vector<double> losses;
     n = nn;
     m = mm;
@@ -45,18 +46,12 @@ std::vector<double> fit(double **x, int *y, int nn, int mm, int iter) {
     double l = loss(w, x, y);
     losses.push_back(l);
     loop(t, 0, iter) {
-        loop(i, 0, n) {
-            if (predict(x[i]) * y[i] < 0) {
-                updateWs(ws, x[i], y[i]);
-                if (l > loss(ws, x, y)) {
-                    updateW(ws);
-                    break;
-                }
-            }
-        }
+        loop(i, 0, n)if (predict(ws, x[i]) * y[i] < 0) updateWs(ws, x[i], y[i]);
+        if (l > loss(ws, x, y)) updateW(ws);
         l = loss(w, x, y);
         losses.push_back(l);
     }
+    free(ws);
     return losses;
 }
 

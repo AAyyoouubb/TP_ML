@@ -12,6 +12,7 @@ double *w;
 
 void randomW();
 
+
 double predict(const double *x) {
     double s = w[m];
     loop(i, 0, m) s += w[i] * x[i];
