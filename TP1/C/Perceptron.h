@@ -7,47 +7,47 @@
 
 #define loop(i, a, b) for(int i=a;i<b;i++)
 
-int n, m;
-double *w;
+int per_n, per_m;
+double *per_w;
 
-void randomW();
+void per_randomW();
 
-double predict(const double *x) {
-    double s = w[m];
-    loop(i, 0, m) s += w[i] * x[i];
+double per_predict(const double *x) {
+    double s = per_w[per_m];
+    loop(i, 0, per_m) s += per_w[i] * x[i];
     return s;
 }
 
-double loss(double **x, const int *y) {
+double per_loss(double **x, const int *y) {
     int l = 0;
-    loop(i, 0, n) if (predict(x[i]) * y[i] < 0) l++;
-    return (double) l / n;
+    loop(i, 0, per_n) if (per_predict(x[i]) * y[i] < 0) l++;
+    return (double) l / per_n;
 }
 
-void updateW(const double *x, int y) {
-    w[m] += y;
-    loop(i, 0, m) w[i] += x[i] * y;
+void per_updateW(const double *x, int y) {
+    per_w[per_m] += y;
+    loop(i, 0, per_m) per_w[i] += x[i] * y;
 }
 
-static std::vector<double> fit(double **x, int *y, int nn, int mm) {
+static std::vector<double> per_fit(double **x, int *y, int nn, int mm) {
     std::vector<double> losses;
-    n = nn;
-    m = mm;
-    w = (double *) (malloc(sizeof(double) * (m + 1)));
-    randomW();
-    double los = loss(x, y);
+    per_n = nn;
+    per_m = mm;
+    per_w = (double *) (malloc(sizeof(double) * (per_m + 1)));
+    per_randomW();
+    double los = per_loss(x, y);
     int iter = 0;
     while (los != 0 and iter < 10e3) {
         iter++;
-        loop(i, 0, n) if (predict(x[i]) * y[i] < 0) updateW(x[i], y[i]);
-        los = loss(x, y);
+        loop(i, 0, per_n) if (per_predict(x[i]) * y[i] < 0) per_updateW(x[i], y[i]);
+        los = per_loss(x, y);
         losses.push_back(los);
     }
     return losses;
 }
 
-void randomW() {
-    loop(i, 0, m + 1) w[i] = rand() % 10;
+void per_randomW() {
+    loop(i, 0, per_m + 1) per_w[i] = rand() % 10;
 }
 
 #endif //TP_ML_PERCEPTRON_H

@@ -1,7 +1,7 @@
 
-//#include "TP1/C/Perceptron.h"
+#include "TP1/C/Perceptron.h"
 #include "TP1/C/Pocket.h"
-//#include "TP1/C/DeltaRule.h"
+#include "TP1/C/DeltaRule.h"
 
 #include <cstdio>
 #include <Python.h>
@@ -42,8 +42,8 @@ vector<vector<double>> getPoints(char *name, char *func) {
     return pts;
 }
 
-void plotLoss(const vector<double> &loss, char *name, char *func) {
-    PyObject *pfunc, *lib, *res, *tmp, *args, *tuple;
+void plotLoss(const vector<double> &loss, const vector<double> &loss2, const vector<double> &loss3, char *name, char *func) {
+    PyObject *pfunc, *lib, *res, *tmp, *args, *args2, *args3, *tuple;
 
     PyRun_SimpleString("import sys");
     // TODO: put the path to your current working directory
@@ -52,37 +52,37 @@ void plotLoss(const vector<double> &loss, char *name, char *func) {
     PyObject *pname = PyUnicode_FromString(name);
     lib = PyImport_Import(pname);
     pfunc = PyObject_GetAttrString(lib, func);
+    tuple = PyTuple_New(3);
+    //////////////////
     args = PyList_New(loss.size());
-    loop(i, 0, loss.size())
-    {
+    loop(i, 0, loss.size()) {
         tmp = PyFloat_FromDouble(loss[i]);
         PyList_SetItem(args, i, tmp);
     }
-    tuple = PyTuple_New(1);
     PyTuple_SetItem(tuple, 0, args);
+
+    ////////////////
+    args2 = PyList_New(loss2.size());
+    loop(i, 0, loss2.size()) {
+        tmp = PyFloat_FromDouble(loss2[i]);
+        PyList_SetItem(args2, i, tmp);
+    }
+    PyTuple_SetItem(tuple, 1, args2);
+
+    ///////////////
+    args3 = PyList_New(loss3.size());
+    loop(i, 0, loss3.size()) {
+        tmp = PyFloat_FromDouble(loss3[i]);
+        PyList_SetItem(args3, i, tmp);
+    }
+    PyTuple_SetItem(tuple, 2, args3);
+
+    ////////////////////
     PyObject_CallObject(pfunc, tuple);
 
     Py_DECREF(pname);
     Py_DECREF(tuple);
     Py_DECREF(args);
-    Py_DECREF(lib);
-    Py_DECREF(pfunc);
-}
-
-void showLoss(char *name, char *func) {
-    PyObject *pfunc, *lib;
-
-    PyRun_SimpleString("import sys");
-    // TODO: put the path to your current working directory
-    PyRun_SimpleString("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
-
-    PyObject *pname = PyUnicode_FromString(name);
-    lib = PyImport_Import(pname);
-    Py_DECREF(pname);
-    pfunc = PyObject_GetAttrString(lib, func);
-
-    PyObject_CallObject(pfunc, nullptr);
-
     Py_DECREF(lib);
     Py_DECREF(pfunc);
 }
@@ -106,17 +106,13 @@ int main(int argc, char *argv[]) {
     }
 
     // Optimize and get the loss's evolution
-// TODO: include each library separately to test it and remove the other.
-//        vector<double> percep = fit(x, y, nn, mm);
-    vector<double> pocket = fit(x, y, nn, mm, 10000);
-//    vector<double> delta = fit(x, y, nn, mm, 10000);
+    vector<double> percep = per_fit(x, y, nn, mm);
+    vector<double> pocket = poc_fit(x, y, nn, mm, 100);
+    vector<double> delta = dlt_fit(x, y, nn, mm, 100);
 
     // Plotting the error.
-    // TODO: include each library separately to test it and remove the other.
-//    plotLoss(percep, "losses", "plotLosses");
-    plotLoss(pocket, "losses", "plotLosses");
-//    plotLoss(delta, "losses", "plotLosses");
-
+    // Beware the order of the algorithms losses!
+    plotLoss(percep, pocket, delta, "losses", "plotLosses");
 
     Py_Finalize();
 

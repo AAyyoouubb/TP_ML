@@ -7,49 +7,49 @@
 
 #define loop(i, a, b) for(int i=a;i<b;i++)
 
-int n, m;
-double *w;
+int dlt_n, dlt_m;
+double *dlt_w;
 
-void randomW();
+void dlt_randomW();
 
 
-double predict(const double *x) {
-    double s = w[m];
-    loop(i, 0, m) s += w[i] * x[i];
+double dlt_predict(const double *x) {
+    double s = dlt_w[dlt_m];
+    loop(i, 0, dlt_m) s += dlt_w[i] * x[i];
     return s;
 }
 
-double loss(double **x, const int *y) {
+double dlt_loss(double **x, const int *y) {
     double l = 0;
-    loop(i, 0, n) l += pow(y[i] - predict(x[i]), 2);
-    return l / n;
+    loop(i, 0, dlt_n) l += pow(y[i] - dlt_predict(x[i]), 2);
+    return l / dlt_n;
 }
 
-void updateW(const double *x, double e) {
-    w[m] += e;
-    loop(i, 0, m) w[i] += x[i] * e;
+void dlt_updateW(const double *x, double e) {
+    dlt_w[dlt_m] += e;
+    loop(i, 0, dlt_m) dlt_w[i] += x[i] * e;
 }
 
-std::vector<double> fit(double **x, int *y, int nn, int mm, int iter) {
+std::vector<double> dlt_fit(double **x, int *y, int nn, int mm, int iter) {
     std::vector<double> losses;
-    n = nn;
-    m = mm;
-    w = (double *) (malloc(sizeof(double) * (m + 1)));
-    randomW();
-    losses.push_back(loss(x, y));
+    dlt_n = nn;
+    dlt_m = mm;
+    dlt_w = (double *) (malloc(sizeof(double) * (dlt_m + 1)));
+    dlt_randomW();
+    losses.push_back(dlt_loss(x, y));
     double e;
     loop(t, 0, iter) {
-        loop(i, 0, n) {
-            e = y[i] - predict(x[i]);
-            if (e != 0) updateW(x[i], 2 * e / n);
+        loop(i, 0, dlt_n) {
+            e = y[i] - dlt_predict(x[i]);
+            if (e != 0) dlt_updateW(x[i], 2 * e / dlt_n);
         }
-        losses.push_back(loss(x, y));
+        losses.push_back(dlt_loss(x, y));
     }
     return losses;
 }
 
-void randomW() {
-    loop(i, 0, m + 1) w[i] = rand() % 10;
+void dlt_randomW() {
+    loop(i, 0, dlt_m + 1) dlt_w[i] = rand() % 10;
 }
 
 
