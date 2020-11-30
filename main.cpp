@@ -18,7 +18,7 @@ vector<vector<double>> getPoints(char *name, char *func) {
 
     run("import sys");
     // TODO: put the path to your current working directory
-    run("sys.path.append('/home/..../')");
+    run("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
 
     PyObject *pname = PyUnicode_FromString(name);
     lib = PyImport_Import(pname);
@@ -47,7 +47,7 @@ void plotLoss(const vector<double> &loss, const vector<double> &loss2, const vec
 
     PyRun_SimpleString("import sys");
     // TODO: put the path to your current working directory
-    PyRun_SimpleString("sys.path.append('/home/..../')");
+    PyRun_SimpleString("sys.path.append('/home/ayoub/CLionProjects/TP_ML/')");
 
     PyObject *pname = PyUnicode_FromString(name);
     lib = PyImport_Import(pname);
