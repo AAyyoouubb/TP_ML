@@ -2,9 +2,9 @@
 #define TP_ML_MULTIREGRESSION_H
 
 #include <stdio.h>
-#include "../Math_Functions.h"
-#include "../Distributions.h"
-#include "../Optimizer.h"
+#include "../../new/Math_Functions.h"
+#include "../../new/Distributions.h"
+#include "../../new/Optimizer.h"
 
 #define loop(i, a, b) for(int i=a;i<b;i++)
 

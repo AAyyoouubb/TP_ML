@@ -1,7 +1,8 @@
 
-#include "TP1/C/Perceptron.h"
-#include "TP1/C/Pocket.h"
-#include "TP1/C/DeltaRule.h"
+#include "Classification/Perceptron.h"
+#include "Classification/Pocket.h"
+#include "Regression/Adaline.h"
+#include "new/DataGenerator.h"
 
 #include <cstdio>
 #include <Python.h>
@@ -42,7 +43,8 @@ vector<vector<double>> getPoints(char *name, char *func) {
     return pts;
 }
 
-void plotLoss(const vector<double> &loss, const vector<double> &loss2, const vector<double> &loss3, char *name, char *func) {
+void
+plotLoss(const vector<double> &loss, const vector<double> &loss2, const vector<double> &loss3, char *name, char *func) {
     PyObject *pfunc, *lib, *res, *tmp, *args, *args2, *args3, *tuple;
 
     PyRun_SimpleString("import sys");
@@ -89,32 +91,30 @@ void plotLoss(const vector<double> &loss, const vector<double> &loss2, const vec
 
 // Command: g++ main.cpp -o main -lpython3.8 -I /usr/include/python3.8
 
+int label(int d, double *x) {
+    // w=[10.55,-1.00153,394.004059]: last one is the bias.
+    double w[] = {171.09095, -.109901, 0.10012};
+    double sum = 0;
+    loop(i, 0, d) sum += w[i] * x[i];
+    return sum > 0 ? 1 : -1;
+}
+
 int main(int argc, char *argv[]) {
 
-    Py_Initialize();
+//    Py_Initialize();
 
-    //  Create the X matrix and y and model to use.
-    //  TODO: check this to know how to add points: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.ginput.html
-    vector<vector<double>> pts = getPoints("getPoints", "points");
-    int nn = pts.size(), mm = pts[0].size() - 1;
-    double **x = (double **) malloc(sizeof(double) * nn);
-    int *y = (int *) malloc(sizeof(int) * nn);
-    for (int i = 0; i < nn; i++) {
-        x[i] = (double *) malloc(sizeof(double) * mm);
-        y[i] = pts[i][mm];
-        for (int j = 0; j < mm; j++) x[i][j] = pts[i][j];
-    }
+    // Fix H & epsilon & delta & target function to predict;
+    double eps = .05;
+    double delta = .01;
+    int d = 2;
+    long sample_complexity = minimumSampleComplexity(d + 1, eps, delta);
+    printf("Sample Complexity: %li\n", sample_complexity);
+    double **x = generateInputs(sample_complexity, d,1000);
+    int *y = labelInputs(sample_complexity, d + 1, x, &label);
 
-    // Optimize and get the loss's evolution
-    vector<double> percep = per_fit(x, y, nn, mm);
-    vector<double> pocket = poc_fit(x, y, nn, mm, 100);
-    vector<double> delta = dlt_fit(x, y, nn, mm, 100);
+    per_fit(x, y, sample_complexity, d);
 
-    // Plotting the error.
-    // Beware the order of the algorithms losses!
-    plotLoss(percep, pocket, delta, "losses", "plotLosses");
-
-    Py_Finalize();
+//    Py_Finalize();
 
     return 0;
 }

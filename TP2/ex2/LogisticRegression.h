@@ -6,22 +6,22 @@
 #define TP_ML_LOGISTICREGRESSION_H
 
 #include <stdio.h>
-#include "../Optimizer.h"
-#include "../Distributions.h"
+#include "../../new/Optimizer.h"
+#include "../../new/Distributions.h"
 
 int m;
-double **x; // TODO: each column is a feature; x should contain 1 at first column;
+double **x; // TODO: each column is a feature; x should contain 1 at last column;
 int *y;
 int dim;    // Dimension of w.
 
 
-double loss(double *w) {
+double cost(double *w) {
     double l = 0;
     loop(i, 0, m) l += log(1 + exp(-y[i] * dot_product(dim, w, x[i])));
     return l / m;
 }
 
-double *gradientLoss(double *w) {
+double *gradientCost(double *w) {
     // No need to allocate the same array for multiple uses unless it changes it's size.
     static double *g = (double *) malloc(dim * sizeof(double));
     double tmp;
