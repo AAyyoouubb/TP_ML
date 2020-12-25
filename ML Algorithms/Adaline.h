@@ -4,9 +4,9 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../new/Math_Functions.h"
-#include "../new/Distributions.h"
-#include "../new/Optimizer.h"
+#include "../Maths/Math_Functions.h"
+#include "../Maths/Distributions.h"
+#include "../Maths/Optimizer.h"
 
 #define loop(i, a, b) for(int i=a;i<b;i++)
 
@@ -20,7 +20,7 @@ long double predict(long double *w, long double *xx) {
 }
 
 long double costFunction(long double *w) {
-    long  double l = 0;
+    long double l = 0;
     loop(i, 0, m)l += pow(y[i] - predict(w, x[i]), 2);
     return l / m;
 }
@@ -29,7 +29,7 @@ long double costFunction(long double *w) {
 long double *gradientCost(long double *w) {
     // No need to allocate the same array for multiple uses unless it changes it's size.
     static long double *g = (long double *) malloc(dim * sizeof(long double));
-    long  double tmp;
+    long double tmp;
     loop(j, 0, dim) g[j] = 0;
     loop(i, 0, m) {
         tmp = -2 * (y[i] - predict(w, x[i]));
@@ -45,7 +45,7 @@ long double *fitData() {
     generateUniformly(dim, w);
 
     // Execute Gradient Descent Algorithm using logistic loss;
-    gradientDescent(dim, w, &gradientCost, &costFunction, 1200);
+    gradientDescent(dim, w, &gradientCost, &costFunction, 10e-10);
     // Print final loss, and optimal parameters;
     printf("\n Set of optimal Parameters: \t");
     loop(i, 0, dim) printf("%.20Lf  ", w[i]);
@@ -54,27 +54,29 @@ long double *fitData() {
     return w;
 }
 
-void read_csv(char *filename, int dimm, int mm) {
-    FILE *file = fopen(filename, "r");
+void read_csv( int dimm, int mm) {
+    FILE *file = fopen("cars.csv", "r");
     if (file == NULL) exit(-1);
     dim = dimm;
     m = mm;
     x = (long double **) malloc(m * sizeof(long double *));
     y = (long double *) malloc(m * sizeof(long double));
     char line[100];
+    fgets(line, 100, file);
     // Now Read each observation;
     double tmp;
     loop(i, 0, m) {
         // Allocate memo for observation;
         x[i] = (long double *) malloc(dim * sizeof(long double));
-        // Reading the rest of the variables
-        loop(j, 0, dim ) {
-            // Read the comma here.
-            fscanf(file, "%lf", &tmp);
-            x[i][j] = tmp;
-            fscanf(file, "%c", line);
-        }
-        // Now reading the label
+        x[i][0] = 1;
+        // ignore the id
+        fscanf(file, "%lf", &tmp);
+        fscanf(file, "%c", line);
+        // Read the speed
+        fscanf(file, "%lf", &tmp);
+        x[i][1] = tmp;
+        fscanf(file, "%c", line);
+        // Now reading the distance
         fscanf(file, "%lf", &tmp);
         y[i] = tmp;
         fscanf(file, "%c", line);

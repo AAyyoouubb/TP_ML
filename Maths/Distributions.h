@@ -35,12 +35,12 @@ double sampleNormal() {
     return u * c;
 }
 
-void generateUsingStandardNormal(int dim, double *w) {
+void generateUsingStandardNormal(int dim, long double *w) {
     loop(i, 0, dim) w[i] = sampleNormal();
 }
 
-void generateUsingBernouilli(int dim, double *w) {
-    loop(i, 0, dim) w[i] = (rand() / (double) RAND_MAX < .4) ? 1 : 0;
+void generateUsingBernouilli(int dim, long double *w,double p) {
+    loop(i, 0, dim) w[i] = (rand() / (double) RAND_MAX < p) ? 1 : 0;
 }
 
 #endif //TP_ML_DISTRIBUTIONS_H

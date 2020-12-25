@@ -8,16 +8,16 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <bits/stdc++.h>
-#include "../new/Math_Functions.h"
-#include "../new/Distributions.h"
-#include "../new/Optimizer.h"
+#include "../Maths/Math_Functions.h"
+#include "../Maths/Distributions.h"
+#include "../Maths/Optimizer.h"
 
 
 #define loop(i, a, b) for(int i=a;i<b;i++)
 
 int m;
-double **x; // TODO: each column is a feature; x should contain 1 at last column;
-int *y;
+long double **x; // TODO: each column is a feature; x should contain 1 at last column;
+long double *y; // TODO: this y must be either 0 or 1;
 int dim;    // Dimension of w.
 
 
@@ -25,13 +25,13 @@ double sigmoid(double z) {
     return 1 / (1 + exp(-z));
 }
 
-double predict(double *w, double *xx) {
+long double predict(long double *w, long double *xx) {
     return sigmoid(dot_product(dim, w, xx));
 }
 
-double costFunction(double *w) {
-    double l = 0;
-    double tmp;
+long double costFunction(long double *w) {
+    long  double l = 0;
+    long  double tmp;
     loop(i, 0, m) {
         tmp = predict(w, x[i]);
         l -= y[i] * log(tmp) + (1 - y[i]) * log(1 - tmp);
@@ -39,19 +39,20 @@ double costFunction(double *w) {
     return l / m;
 }
 
-double generalisationError(double *w) {
-    double l = 0;
-    double tmp;
+long double generalisationError(long double *w) {
+    long double l = 0;
+    long double tmp;
     loop(i, m, 118) {
         tmp = predict(w, x[i]);
         l -= y[i] * log(tmp) + (1 - y[i]) * log(1 - tmp);
     }
+    // TODO: 118
     return l / (118 - m);
 }
 
-double *gradientCost(double *w) {
+long double *gradientCost(long double *w) {
     // No need to allocate the same array for multiple uses unless it changes it's size.
-    static double *g = (double *) malloc(dim * sizeof(double));
+    static long double *g = (long double *) malloc(dim * sizeof(long double));
     double tmp;
     loop(j, 0, dim) g[j] = 0;
     loop(i, 0, m) {
@@ -62,17 +63,17 @@ double *gradientCost(double *w) {
     return g;
 }
 
-double *fitData() {
+long double *fitData() {
     // Initialize W
-    double *w = (double *) malloc(dim * sizeof(double));
+    long double *w = (long double *) malloc(dim * sizeof(long double));
     generateUniformly(dim, w);
 
     // Execute Gradient Descent Algorithm using logistic loss;
     gradientDescent(dim, w, &gradientCost, &costFunction, 10.e-10);
     // Print final loss, and optimal parameters;
     printf("\n Set of optimal Parameters: \t");
-    loop(i, 0, dim) printf("%lf  ", w[i]);
-    printf("\n Final Loss: \t %.12lf", costFunction(w));
+    loop(i, 0, dim) printf("%Lf  ", w[i]);
+    printf("\n Final Loss: \t %.12Lf", costFunction(w));
 
     return w;
 }
@@ -82,15 +83,15 @@ void read_csv(char* filename, int dimm) {
     if (file == NULL) exit(-1);
     dim = dimm;
     m = 118;
-    x = (double **) malloc(m * sizeof(double *));
-    y = (int *) malloc(m * sizeof(int));
+    x = (long double **) malloc(m * sizeof(long double *));
+    y = (long double *) malloc(m * sizeof(long double));
     char line[100];
     // Now Read each observation;
     double tmp;
     int itmp;
     loop(i, 0, m) {
         // Allocate memo for observation;
-        x[i] = (double *) malloc(dim * sizeof(double));
+        x[i] = (long double *) malloc(dim * sizeof(long double));
 
         // Reading the rest of the variables
         loop(j, 0, dim ) {
