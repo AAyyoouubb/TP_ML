@@ -7,8 +7,13 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #define loop(i, a, b) for(int i=a;i<b;i++)
+
+long double uniform_number(){
+    return rand()/(long double) RAND_MAX;
+}
 
 void shuffle(int n, double **x, int *y) {
     loop(k, 0, 100)loop(i, 0, n) {

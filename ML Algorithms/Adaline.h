@@ -54,7 +54,7 @@ long double *fitData() {
     return w;
 }
 
-void read_csv( int dimm, int mm) {
+void read_Cars( int dimm, int mm) {
     FILE *file = fopen("cars.csv", "r");
     if (file == NULL) exit(-1);
     dim = dimm;
@@ -83,6 +83,37 @@ void read_csv( int dimm, int mm) {
 
     }
     fclose(file);
+}
+void read_Nasa() {
+    FILE *file = fopen("airfoil_self_noise.csv", "r");
+    if (file == NULL) exit(-1);
+    dim = 6;
+    m = 1503;
+    x = (type **) malloc(m * sizeof(type *));
+    y = (type *) malloc(m * sizeof(type));
+    char line[100];
+    // Now Read each observation;
+    double tmp;
+    int itmp;
+    loop(i, 0, m) {
+        // Allocate memo for observation;
+        x[i] = (type *) malloc(dim * sizeof(type));
+        x[i][dim - 1] = 1;
+        // Reading the rest of the variables
+        loop(j, 0, dim - 1) {
+            // Read the comma here.
+            fscanf(file, "%lf", &tmp);
+            x[i][j] = tmp;
+            fscanf(file, "%c", line);
+        }
+        // Now reading the label
+        fscanf(file, "%lf", &tmp);
+        y[i] = tmp;
+        fscanf(file, "%c", line);
+
+    }
+    fclose(file);
+    m = 1052;
 }
 
 

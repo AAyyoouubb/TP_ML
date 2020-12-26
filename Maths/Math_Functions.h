@@ -30,7 +30,9 @@ type *mat_vector(int dim, type **matrix, type *vect) {
 
 type dot_product(int dim, type *w, type *x) {
     type sum = 0;
-    loop(i, 0, dim)sum += w[i] * x[i];
+    loop(i, 0, dim){
+        sum += w[i] * x[i];
+    }
     return sum;
 }
 
